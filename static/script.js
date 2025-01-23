@@ -18,15 +18,45 @@ audioPlayer.addEventListener('timeupdate', () => {
   document.querySelectorAll('.transcript-chunk').forEach(el => {
     el.classList.toggle('highlight', el.dataset.start <= currentTime && el.dataset.end > currentTime);
   });
+  
+  // Auto-scroll to active chunk
+  scrollToActiveChunk();
 });
 
 // Implement loadTranscript function
 function loadTranscript() {
   transcriptDiv.innerHTML = transcriptData.map(chunk => `
-    <div class="transcript-chunk mb-2" data-start="${chunk.timestamp[0]}" data-end="${chunk.timestamp[1]}">
+    <div class="transcript-chunk mb-2" 
+         data-start="${chunk.timestamp[0]}" 
+         data-end="${chunk.timestamp[1]}"
+         onclick="seekToTime(${chunk.timestamp[0]})">
       ${chunk.text}
     </div>
   `).join('');
+}
+
+// Seek to specific time in audio
+function seekToTime(time) {
+  audioPlayer.currentTime = time;
+  audioPlayer.play();
+}
+
+// Auto-scroll to active chunk
+function scrollToActiveChunk() {
+  const activeChunk = document.querySelector('.transcript-chunk.highlight');
+  if (activeChunk) {
+    const chunkTop = activeChunk.offsetTop;
+    const chunkHeight = activeChunk.offsetHeight;
+    const containerHeight = transcriptDiv.offsetHeight;
+    
+    // Calculate scroll position to center the active chunk
+    const scrollTo = chunkTop - (containerHeight / 2) + (chunkHeight / 2);
+    
+    transcriptDiv.scrollTo({
+      top: scrollTo,
+      behavior: 'smooth'
+    });
+  }
 }
 
 // Load audio files from the backend

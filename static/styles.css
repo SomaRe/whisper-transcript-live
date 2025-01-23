@@ -5,6 +5,16 @@
   padding: 2px 4px;
 }
 
+/* Make transcript chunks clickable */
+.transcript-chunk {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.transcript-chunk:hover {
+  background-color: #f0f0f0;
+}
+
 /* Remove default Bootstrap focus styles */
 select:focus, button:focus {
   box-shadow: none !important;
