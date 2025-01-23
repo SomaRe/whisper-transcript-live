@@ -9,14 +9,32 @@ let transcriptData = [];
 
 audioPlayer.addEventListener('timeupdate', () => {
   const currentTime = audioPlayer.currentTime;
-  // Find the current transcript chunk
-  const activeChunk = transcriptData.find(chunk => 
-    currentTime >= chunk.timestamp[0] && currentTime < chunk.timestamp[1]
-  );
+  
+  // Find the current transcript chunk with a small buffer
+  const activeChunk = transcriptData.find(chunk => {
+    const [start, end] = chunk.timestamp;
+    // Add a small buffer to account for potential timing discrepancies
+    return currentTime >= start - 0.5 && currentTime <= end + 0.5;
+  });
   
   // Highlight active chunk
-  document.querySelectorAll('.transcript-chunk').forEach(el => {
-    el.classList.toggle('highlight', el.dataset.start <= currentTime && el.dataset.end > currentTime);
+  document.querySelectorAll('.transcript-chunk').forEach((el, index) => {
+    const start = parseFloat(el.dataset.start);
+    const end = parseFloat(el.dataset.end);
+    
+    // Use the same buffer logic for highlighting
+    const isActive = currentTime >= start - 0.5 && currentTime <= end + 0.5;
+    el.classList.toggle('highlight', isActive);
+    
+    // Optional: Log debugging information
+    if (isActive) {
+      console.log(`Active chunk (${index}):`, {
+        text: el.textContent.trim(),
+        start: start,
+        end: end,
+        currentTime: currentTime
+      });
+    }
   });
   
   // Auto-scroll to active chunk
@@ -25,7 +43,10 @@ audioPlayer.addEventListener('timeupdate', () => {
 
 // Implement loadTranscript function
 function loadTranscript() {
-  transcriptDiv.innerHTML = transcriptData.map(chunk => `
+  // Sort chunks by start time to ensure correct order
+  const sortedChunks = [...transcriptData].sort((a, b) => a.timestamp[0] - b.timestamp[0]);
+  
+  transcriptDiv.innerHTML = sortedChunks.map(chunk => `
     <div class="transcript-chunk mb-2" 
          data-start="${chunk.timestamp[0]}" 
          data-end="${chunk.timestamp[1]}"
