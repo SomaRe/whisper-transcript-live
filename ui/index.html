@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audio Transcript Player</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Audio Transcript Player</h1>
+    <div>
+      <label for="audioFile">Upload Audio File:</label>
+      <input type="file" id="audioFile" accept="audio/*">
+    </div>
+    <div>
+      <label for="jsonFile">Upload Transcript JSON:</label>
+      <input type="file" id="jsonFile" accept=".json">
+    </div>
+    <audio id="audioPlayer" controls></audio>
+    <div id="transcript"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
