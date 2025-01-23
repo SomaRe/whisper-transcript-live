@@ -1,45 +1,18 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 20px;
-  }
-  
-  .container {
-    max-width: 800px;
-    margin: 0 auto;
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  h1 {
-    text-align: center;
-    color: #333;
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-  }
-  
-  input[type="file"] {
-    margin-bottom: 20px;
-  }
-  
-  #transcript {
-    margin-top: 20px;
-    line-height: 1.6;
-    max-height: 300px;
-    overflow-y: auto;
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-radius: 4px;
-  }
-  
-  .highlight {
-    background-color: #ffeb3b;
-    transition: background-color 0.3s;
-  }
+/* Add highlighting styles */
+.highlight {
+  background-color: #ffe082;
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+
+/* Remove default Bootstrap focus styles */
+select:focus, button:focus {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+#transcript {
+  min-height: 200px;
+  max-height: 60vh;
+  overflow-y: auto;
+}

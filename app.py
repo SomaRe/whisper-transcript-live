@@ -2,6 +2,9 @@ from flask import Flask, render_template, jsonify, request, send_from_directory
 import os
 from pathlib import Path
 import subprocess
+from utils.audio_format_conversion import convert_m4a_to_mp3
+from datetime import datetime  # Fix datetime import
+import json
 
 app = Flask(__name__)
 
@@ -11,13 +14,17 @@ def index():
     return render_template('index.html')
 
 # API to list audio files
+# In app.py, modify the list_audio_files function
 @app.route('/api/audio_files', methods=['GET'])
 def list_audio_files():
+    # Convert any m4a files first
+    convert_m4a_to_mp3("audio")  # This will process m4a files
+    
     audio_folder = Path("audio")
     audio_files = [f.name for f in audio_folder.glob("*.mp3")]
     return jsonify(audio_files)
 
-# API to process audio and generate transcript
+# In app.py, modify the process_audio function
 @app.route('/api/process_audio', methods=['POST'])
 def process_audio():
     audio_file = request.json.get('audio_file')
@@ -25,15 +32,16 @@ def process_audio():
         return jsonify({"error": "No audio file provided"}), 400
 
     audio_path = Path("audio") / audio_file
-    json_path = audio_path.with_suffix('.json')
+    timestamp = int(datetime.now().timestamp())  # Fixed datetime usage
+    json_filename = f"{audio_path.stem}_{timestamp}.json"
+    json_path = Path("transcripts") / json_filename
 
-    # If JSON transcript already exists, return success
     if json_path.exists():
         return jsonify({"message": "Transcript already exists"}), 200
 
-    # Run the audio-to-text processing script
     try:
-        subprocess.run(["python", "transfromers_whisper(temp_fix).py", str(audio_path)], check=True)
+        # Call the correct Whisper processing script
+        subprocess.run(["python", "utils/openai_whisper.py", str(audio_path)], check=True)
         return jsonify({"message": "Transcript generated successfully"}), 200
     except subprocess.CalledProcessError as e:
         return jsonify({"error": f"Failed to generate transcript: {e}"}), 500
@@ -42,6 +50,26 @@ def process_audio():
 @app.route('/audio/<filename>')
 def serve_audio(filename):
     return send_from_directory('audio', filename)
+
+# In app.py, add a new endpoint to fetch transcripts
+@app.route('/api/transcripts', methods=['GET'])
+def get_transcript():
+    audio_file = request.args.get('audio_file')
+    if not audio_file:
+        return jsonify({"error": "No audio file provided"}), 400
+
+    transcript_folder = Path("transcripts")
+    transcript_files = list(transcript_folder.glob(f"{audio_file.replace('.mp3', '')}_*.json"))
+    
+    if not transcript_files:
+        return jsonify({"error": "Transcript not found"}), 404
+
+    # Return the most recent transcript
+    latest_transcript = max(transcript_files, key=os.path.getctime)
+    with open(latest_transcript, 'r') as f:
+        transcript_data = json.load(f)
+    
+    return jsonify(transcript_data)
 
 if __name__ == '__main__':
     app.run(debug=True)

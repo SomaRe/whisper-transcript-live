@@ -1,26 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Audio Transcript Player</title>
-  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-  <div class="container">
-    <h1>Audio Transcript Player</h1>
-    <div>
-      <label for="audioSelect">Select Audio File:</label>
-      <select id="audioSelect">
-        <option value="">-- Select an audio file --</option>
-      </select>
-      <button id="refreshButton">Refresh List</button>
+  <div class="container mt-4">
+    <h1 class="mb-4">Audio Transcript Player</h1>
+    <div class="row g-3 mb-3">
+      <div class="col-md-8">
+        <select id="audioSelect" class="form-select">
+          <option value="">-- Select an audio file --</option>
+        </select>
+      </div>
+      <div class="col-md-4 d-flex gap-2">
+        <button id="refreshButton" class="btn btn-outline-secondary">Refresh List</button>
+        <button id="processButton" class="btn btn-primary">Generate Transcript</button>
+      </div>
     </div>
-    <button id="processButton">Generate Transcript</button>
-    <div id="statusMessage"></div>
-    <audio id="audioPlayer" controls></audio>
-    <div id="transcript"></div>
+    
+    <div id="statusMessage" class="alert alert-info" role="alert" style="display: none;"></div>
+    
+    <audio id="audioPlayer" class="w-100 mb-3" controls></audio>
+    
+    <div id="transcript" class="bg-light p-3 rounded-2"></div>
   </div>
-  <script src="script.js"></script>
+  
+  <!-- Add Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
-</html>
