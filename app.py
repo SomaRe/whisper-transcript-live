@@ -15,13 +15,14 @@ def index():
 
 # API to list audio files
 # In app.py, modify the list_audio_files function
+#TODO: DO NOT USE MP3, convert to other format, preferred is WAV.
 @app.route('/api/audio_files', methods=['GET'])
 def list_audio_files():
     # Convert any m4a files first
     convert_m4a_to_mp3("audio")  # This will process m4a files
     
     audio_folder = Path("audio")
-    audio_files = [f.name for f in audio_folder.glob("*.mp3")]
+    audio_files = [f.name for f in audio_folder.glob("*.m4a")]
     return jsonify(audio_files)
 
 # In app.py, modify the process_audio function
@@ -59,7 +60,7 @@ def get_transcript():
         return jsonify({"error": "No audio file provided"}), 400
 
     transcript_folder = Path("transcripts")
-    transcript_files = list(transcript_folder.glob(f"{audio_file.replace('.mp3', '')}_*.json"))
+    transcript_files = list(transcript_folder.glob(f"{audio_file.replace('.m4a', '')}_*.json"))
     
     if not transcript_files:
         return jsonify({"error": "Transcript not found"}), 404
