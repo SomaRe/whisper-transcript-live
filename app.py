@@ -23,7 +23,7 @@ def list_audio_files():
     audio_files = [f.name for f in audio_folder.glob("*")]  # Changed to .m4a
     return jsonify(audio_files)
 
-# Process audio using the external script
+# Process audio using the external script TODO: Doesnt work as expected, needs fixing, better UI
 @app.route('/api/process_audio', methods=['POST'])
 def process_audio():
     audio_file = request.json.get('audio_file')
