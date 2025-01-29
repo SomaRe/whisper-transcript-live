@@ -1,28 +1,43 @@
-/* Add highlighting styles */
+/* Highlight styling */
 .highlight {
-  background-color: #ffe082;
+  background-color: #FFF59D; /* Lighter shade of yellow */
   border-radius: 4px;
   padding: 2px 4px;
 }
 
-/* Make transcript chunks clickable */
+/* Transcript chunk styling */
 .transcript-chunk {
   cursor: pointer;
   transition: background-color 0.2s;
+  margin-bottom: 5px; /* Spacing between chunks */
+  padding: 5px;
 }
 
 .transcript-chunk:hover {
-  background-color: #f0f0f0;
+  background-color: #f8f8f8;
 }
 
 /* Remove default Bootstrap focus styles */
-select:focus, button:focus {
+select:focus,
+button:focus {
   box-shadow: none !important;
   outline: none !important;
 }
 
+/* Transcript container */
 #transcript {
+  border: 1px solid #ced4da;
   min-height: 200px;
   max-height: 60vh;
   overflow-y: auto;
+  padding: 10px; /* Add padding inside the container */
+  margin-top: 1rem;
+  border-radius: 0.25rem; /* Match Bootstrap's default rounding */
+}
+/* Style adjustments for the status message */
+#statusMessage {
+  margin-top: 1rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.25rem;
+  text-align: center; /* Center the text */
 }
