@@ -38,14 +38,13 @@ def process_audio():
     if json_path.exists():
         return jsonify({"message": "Transcript already exists"}), 200
 
-    venv_python = Path(os.getcwd() +  "/venv/Scripts/python.exe")
+    venv_python = Path(os.getcwd() +  "/.venv/Scripts/python.exe")
 
     try:
         subprocess.run([venv_python, "utils/openai_whisper.py", str(audio_path)], check=True)
         return jsonify({"message": "Transcript generated successfully"}), 200
     except subprocess.CalledProcessError as e:
         return jsonify({"error": f"Failed to generate transcript: {e}"}), 500
-
 
 # Serve static files (audio files)
 @app.route('/audio/<filename>')
